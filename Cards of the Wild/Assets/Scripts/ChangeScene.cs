@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class ChangeScene : MonoBehaviour
 {
-    public void OnBeforeTransformParentChanged(string name)
+    public void Change(string name)
     {
         SceneManager.LoadScene(name);
     }

@@ -90,12 +90,12 @@ public class Agent : MonoBehaviour
     	{
     		enemyCards[i] = ClassifyCard(renderTextures[i]);
 
-    		//Debug.Log("Agent.Play - classified card: " + enemyCards[i].ToString() + " -> " + enemyChars[i].ToString());
+    		Debug.Log("Agent.Play - classified card: " + enemyCards[i].ToString() + " -> " + enemyChars[i].ToString());
     	}
 
 
-    	//foreach(int x in enemyCards)
-    	//	Debug.Log(x);
+    	foreach(int x in enemyCards)
+    		Debug.Log(x);
 
     	// Second: compute the state of the game
     	CountMyCards(deck);
@@ -106,8 +106,8 @@ public class Agent : MonoBehaviour
     	// Third: choose an action
     	action = ChooseAction();
 
-    	//Debug.Log("ACTION");
-    	//Debug.Log(action);
+    	Debug.Log("ACTION");
+    	Debug.Log(action);
 
 
     	// Translate the action to cards and return
@@ -172,9 +172,9 @@ public class Agent : MonoBehaviour
     	for(int i=0; i<deck.Length; i++)
     		myCards[deck[i]]++;
 
-    	//Debug.Log("ExtractMyCards");
-    	//foreach(int x in myCards)
-    	//	Debug.Log(x);
+    	Debug.Log("ExtractMyCards");
+    	foreach(int x in myCards)
+    		Debug.Log(x);
 
     }
 
@@ -207,10 +207,10 @@ public class Agent : MonoBehaviour
     	// Combine both. We need the max possible of one of them to convert
     	// 2-indices to 1-index
     	int state = enemy + player*enemyCombinations;
-    	//Debug.Log("STATE");
-    	//Debug.Log(enemy);
-    	//Debug.Log(player);
-    	//Debug.Log(state);
+    	Debug.Log("STATE");
+    	Debug.Log(enemy);
+    	Debug.Log(player);
+    	Debug.Log(state);
 
     	return state;
     }
@@ -251,8 +251,8 @@ public class Agent : MonoBehaviour
     // cards that the agent is playing
    	private int [] ActionToCards(int action)
    	{
-   		//Debug.Log("ActionToCards");
-   		//Debug.Log(action);
+   		Debug.Log("ActionToCards");
+   		Debug.Log(action);
 
    		int [] cards = new int[numEnemyCards];  // Enemy and player show the same number of cards
 
@@ -262,11 +262,12 @@ public class Agent : MonoBehaviour
    			action  /= NUM_CLASSES;
    		}
 
-   		//foreach(int x in cards)
-   		//	Debug.Log(x);
+   		foreach(int x in cards)
+   			Debug.Log(x);
 
    		return cards;
    	}
+
 
 
 }

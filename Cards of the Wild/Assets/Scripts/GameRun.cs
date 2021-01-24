@@ -15,7 +15,9 @@ public class GameRun : MonoBehaviour
 	private int [] enemyChars;	
 	private Agent agent;
 
-	private int NUM_ENEMY_CARDS = 3;
+    private GameObject playerCards;
+
+    private int NUM_ENEMY_CARDS = 3;
 	private int NUM_CLASSES     = 3;
 	private int DECK_SIZE       = 4;
 
@@ -55,10 +57,10 @@ public class GameRun : MonoBehaviour
         enemyCards = GameObject.Find("EnemyCards");
         enemyChars = new int[NUM_ENEMY_CARDS];
 
+        playerCards = GameObject.Find("PlayerCards");
         agent      = GameObject.Find("AgentManager").GetComponent<Agent>();
 
         agent.Initialize();
-
 
         ///////////////////////////////////////
         // Start the game
@@ -101,7 +103,24 @@ public class GameRun : MonoBehaviour
    	  	else if(chars[idx].name.StartsWith("opposum")) label = 2;
 
     	return label;
-    } 
+    }
+
+    private void GeneratePlayerCard(Transform parent, int charindex)
+    {
+
+        int idx = Random.Range(0, backgrounds.Length);
+        Instantiate(backgrounds[idx], parent.position, Quaternion.identity, parent);
+
+
+        idx = Random.Range(0, props.Length);
+        Vector3 position = new Vector3(Random.Range(-3.0f, 3.0f), Random.Range(-3.0f, 3.0f), -1.0f);
+        Instantiate(props[idx], parent.position + position, Quaternion.identity, parent);
+
+        idx = Random.Range(0, chars.Length / NUM_CLASSES);
+        position = new Vector3(Random.Range(-3.0f, 3.0f), Random.Range(-3.0f, 3.0f), -2.0f);
+        Instantiate(chars[charindex * (chars.Length / NUM_CLASSES) + idx], parent.position + position, Quaternion.identity, parent);
+
+    }
 
     // Generate another turn
     IEnumerator GenerateTurn()
@@ -147,12 +166,23 @@ public class GameRun : MonoBehaviour
 	        	textDeck.text += a.ToString() + "/";
 
 
+            int player = 0;
+            foreach (Transform card in playerCards.transform)
+            {
+                foreach (Transform sprite in card)
+                {
+                    Destroy(sprite.gameObject);
+                }
 
+                GeneratePlayerCard(card, action[player]);
+                player++;
 
-	        ///////////////////////////////////////
-	        // Compute reward
-	        ///////////////////////////////////////
-	        float reward = ComputeReward(deck, action);
+            }
+
+            ///////////////////////////////////////
+            // Compute reward
+            ///////////////////////////////////////
+            float reward = ComputeReward(deck, action);
 	        
 	        Debug.Log("Turn/reward: " + turn.ToString() + "->" + reward.ToString());
 

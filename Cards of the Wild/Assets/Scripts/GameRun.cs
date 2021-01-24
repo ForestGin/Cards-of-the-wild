@@ -29,6 +29,15 @@ public class GameRun : MonoBehaviour
 
 	// Other UI elements
 	private UnityEngine.UI.Text textDeck;
+    private UnityEngine.UI.Text textEnemyScore;
+    private UnityEngine.UI.Text textPlayerScore;
+    private UnityEngine.UI.Text textTiesScore;
+    private UnityEngine.UI.Text textInvalidScore;
+
+    int EnemyScore = 0;
+    int PlayerScore = 0;
+    int TiesScore = 0;
+    int InvalidScore = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -49,7 +58,10 @@ public class GameRun : MonoBehaviour
         // UI management
         ///////////////////////////////////////
         textDeck = GameObject.Find("TextDeck").GetComponent<UnityEngine.UI.Text>();
-
+        textEnemyScore = GameObject.Find("TextEnemyScore").GetComponent<UnityEngine.UI.Text>();
+        textPlayerScore = GameObject.Find("TextPlayerScore").GetComponent<UnityEngine.UI.Text>();
+        textTiesScore = GameObject.Find("TextTiesScore").GetComponent<UnityEngine.UI.Text>();
+        textInvalidScore = GameObject.Find("TextInvalidScore").GetComponent<UnityEngine.UI.Text>();
 
         ///////////////////////////////////////
         // Game management
@@ -150,14 +162,18 @@ public class GameRun : MonoBehaviour
 	        foreach(int card in deck)
 	        	textDeck.text += card.ToString() + "/";
 
+            textEnemyScore.text = "Wins: " + EnemyScore.ToString();
+            textPlayerScore.text = "Wins: " + PlayerScore.ToString();
+            textTiesScore.text = "Ties: " + TiesScore.ToString();
+            textInvalidScore.text = "Invalid: " + InvalidScore.ToString();
 
-	        ///////////////////////////////////////
-	        // Tell the player to play
-	        ///////////////////////////////////////
+            ///////////////////////////////////////
+            // Tell the player to play
+            ///////////////////////////////////////
 
-	        // IMPORTANT: wait until the frame is rendered so the player sees
-	        //            the newly generated cards (otherwise it will see the previous ones)
-	        yield return new WaitForEndOfFrame();
+            // IMPORTANT: wait until the frame is rendered so the player sees
+            //            the newly generated cards (otherwise it will see the previous ones)
+            yield return new WaitForEndOfFrame();
 
 	        int [] action = agent.Play(deck, enemyChars);
 
@@ -225,8 +241,11 @@ public class GameRun : MonoBehaviour
     	foreach(int card in action)
     	{
     		deck[card]--;
-    		if(deck[card] < 0)
-    			return RWD_ACTION_INVALID;
+            if (deck[card] < 0)
+            {
+                InvalidScore++;
+                return RWD_ACTION_INVALID;
+            }
     	}
 
 
@@ -243,9 +262,21 @@ public class GameRun : MonoBehaviour
     		}
     		
     	}
-
-    	if(score == 0) return RWD_TIE;
-    	else if(score > 0) return RWD_HAND_WON;
-    	else return RWD_HAND_LOST;
+        
+        if (score == 0)
+        {
+            TiesScore++;
+            return RWD_TIE;
+        }
+        else if (score > 0)
+        {
+            PlayerScore++;
+            return RWD_HAND_WON;
+        }
+        else
+        {
+            EnemyScore++;
+            return RWD_HAND_LOST;
+        }
     }
 }
